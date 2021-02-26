@@ -1,0 +1,19 @@
+FROM python:3.8.1-slim as app-builder
+RUN apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/*
+COPY muffin_v_chihuahua/ /app/muffin_v_chihuahua/
+COPY MANIFEST.in setup.cfg setup.py /app/
+WORKDIR /app
+RUN pip install --user -U pip \
+    && python setup.py bdist_wheel
+
+FROM python:3.8.1-slim as app
+COPY --from=app-builder /root/.local /root/.local
+COPY --from=app-builder /app/dist/ /app/dist/
+COPY muffin_v_chihuahua/data/ /app/data
+WORKDIR /app
+RUN pip install --user -U pip \
+    && pip install dist/muffin_v_chihuahua_frontend-1.0-py3-none-any.whl
+ENV PATH=/root/.local/bin:$PATH
+ENV INFERENCE_HOST localhost
+EXPOSE 8090
+CMD muffin-v-chihuahua-model-as-a-service run-demo --server.port 8090

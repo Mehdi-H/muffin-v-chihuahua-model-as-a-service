@@ -1,0 +1,12 @@
+# dataset of chihuahua images
+muffin_v_chihuahua/data/chihuahua/*
+!muffin_v_chihuahua/data/chihuahua/__init__.py
+
+# dataset of muffin images
+muffin_v_chihuahua/data/muffin/*
+!muffin_v_chihuahua/data/muffin/__init__.py
+
+# by-product of wheel generation
+dist/
+build/
+muffin_v_chihuahua_frontend.egg-info/

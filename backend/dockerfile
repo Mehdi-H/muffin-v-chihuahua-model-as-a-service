@@ -1,0 +1,24 @@
+FROM python:3.8.1-slim as model-builder
+RUN apt-get update \
+    && apt-get install -y wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+RUN wget https://github.com/fchollet/deep-learning-models/releases/download/v0.5/inception_v3_weights_tf_dim_ordering_tf_kernels.h5
+
+FROM python:3.8.1-slim as web-service-builder
+RUN apt-get update \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+COPY muffin_v_chihuahua_ml_service/ml_web_service.py setup.py setup.cfg \
+     muffin_v_chihuahua_ml_service/classifier.py /app/
+WORKDIR /app
+RUN pip install --user -U pip && pip install --user --no-cache-dir .
+
+FROM python:3.8.1-slim as ml-web-service
+COPY --from=web-service-builder /root/.local /root/.local
+COPY --from=web-service-builder /app /app
+COPY --from=model-builder ./inception_v3_weights_tf_dim_ordering_tf_kernels.h5 /app
+WORKDIR /app
+ENV PATH=/root/.local/bin:$PATH
+EXPOSE 8000
+CMD ["uvicorn", "ml_web_service:app", "--host", "0.0.0.0", "--port", "8000"]

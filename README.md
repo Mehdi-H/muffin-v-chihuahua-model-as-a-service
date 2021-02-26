@@ -18,6 +18,21 @@ Packaging of this Python app is done with :
 * the Wheel format ☸️, with setuptools 
 * and docker 🐳.
 
+## Demo : run the muffin-v-chihuahua app with a model separated in an isolated service via docker-compose 🐳 ⚙
+
+You can test the end result immediately with the following docker containers :
+
+```bash
+    $> docker pull mho7/muffin-v-chihuahua-frontend:v1;
+    $> docker pull mho7/muffin-v-chihuahua-backend:v1;
+```
+
+You can then run `docker-compose up` to run these containers.
+
+The frontend app is then available @ <http://localhost:8090>.
+
+The remaining parts of this README document explains how to build these `muffin-v-chihuahua-frontend` and `muffin-v-chihuahua-backend` docker containers.
+
 ## Specificity of this approach (model isolated as a separate service)
 
 This muffin-v-chihuahua classifier works with 2 services :
@@ -46,9 +61,9 @@ Those images are downloaded from <http://image-net.org/>.
 
 You can run `cd frontend/ && make package-wheel` to build a Wheel distribution from
 
-* the [setup.py](./setup.py), [setup.cfg](./setup.cfg) and [MANIFEST.in](./MANIFEST.in) files,
-* the Python sources in the [muffin_v_chihuahua](./muffin_v_chihuahua) package,
-* the images of muffins and chihuahuas in [data/](./muffin_v_chihuahua/data) folder.
+* the [setup.py](./frontend/setup.py), [setup.cfg](./frontend/setup.cfg) and [MANIFEST.in](./frontend/MANIFEST.in) files,
+* the Python sources in the [muffin_v_chihuahua](./frontend/muffin_v_chihuahua) package,
+* the images of muffins and chihuahuas in [data/](./frontend/muffin_v_chihuahua/data) folder.
 
 The result of this command will be the creation of a `dist/` folder containing the `*.whl` distribution.
 
@@ -56,8 +71,8 @@ The result of this command will be the creation of a `dist/` folder containing t
 
 You can run `cd frontend/ && make package-docker` to build a docker image from
 
-* the [dockerfile](./dockerfile) that describes the image,
-* the [Wheel distribution](./dist/muffin_v_chihuahua_with_embedded_model-1.0-py3-none-any.whl) generated in the `dist/` folder
+* the [dockerfile](./frontend/dockerfile) that describes the image,
+* the [Wheel distribution](./frontend/dist/muffin_v_chihuahua_frontend-1.0-py3-none-any.whl) generated in the `dist/` folder
 
 ### Run the application as a docker container 🐳 ⚙
 
@@ -83,3 +98,21 @@ This command will download the InceptionV3 model [listed on Keras website](https
 
 This model is downloaded from François Chollet [deep-learning-models](https://github.com/fchollet/deep-learning-models/) repository, in which the official InceptionV3 model is exposed as an artefact in [release v0.5](https://github.com/fchollet/deep-learning-models/releases/tag/v0.5).
 
+### Package the backend application (Python API + ML mode) as a docker image 📦 🐳 
+
+You can run `cd backend && make package-docker` to build a docker image from the [dockerfile](./backend/dockerfile) that describes the image.
+
+### Run the backend application as a docker container 🐳 ⚙
+
+You can run the application with docker by running the following command : `cd backend && make run-demo`.
+
+While the docker command is running in your terminal, you can open your browser at <http://localhost:8000/> to access the FastAPI Python API. This API exposes 2 routes :
+
+- `http://localhost:8000/` is a healthcheck route returning HTTP 200 and `{STATUS : UP}` when the API is running.
+- `http://localhost:8000/predict/`, via HTTP POST, expects an image file of a muffin or a chihuahua and returns a prediction. 
+
+Here is an example of a prediction requested with Postman on an image of a chihuahua :
+
+![](./docs/requesting-backend-ml-service-with-postman.png)
+
+The API routes are described in [ml_web_service.py](./backend/muffin_v_chihuahua_ml_service/ml_web_service.py), and the API is requested by the frontend in [display_predictions_with_model_as_a_service.py.py](./frontend/muffin_v_chihuahua/display_predictions_with_model_as_a_service.py).

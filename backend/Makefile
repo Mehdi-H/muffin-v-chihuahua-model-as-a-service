@@ -36,3 +36,6 @@ package-docker:
 .PHONY: run-docker  ## 🐳 ⚙️ run the application as a docker container
 run-docker:
 	docker run -p 8000:8000 muffin-v-chihuahua-backend:v1
+
+lint-dockerfile:
+	hadolint dockerfile

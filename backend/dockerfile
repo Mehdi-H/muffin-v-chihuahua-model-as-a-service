@@ -1,6 +1,6 @@
 FROM python:3.8.1-slim as model-builder
 RUN apt-get update \
-    && apt-get install -y wget \
+    && apt-get install --no-install-recommends -y wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 RUN wget https://github.com/fchollet/deep-learning-models/releases/download/v0.5/inception_v3_weights_tf_dim_ordering_tf_kernels.h5

@@ -56,3 +56,6 @@ run-docker:
 run-app: package-wheel
 	pip install dist/muffin_v_chihuahua_with_embedded_model-1.0-py3-none-any.whl
 	muffin-v-chihuahua-with-embedded-model run-demo
+
+lint-dockerfile:
+	hadolint dockerfile

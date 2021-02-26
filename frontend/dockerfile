@@ -16,4 +16,4 @@ RUN pip install --user -U pip \
 ENV PATH=/root/.local/bin:$PATH
 ENV INFERENCE_HOST localhost
 EXPOSE 8090
-CMD muffin-v-chihuahua-model-as-a-service run-demo --server.port 8090
+CMD ["muffin-v-chihuahua-model-as-a-service", "run-demo", "--server.port", "8090"]

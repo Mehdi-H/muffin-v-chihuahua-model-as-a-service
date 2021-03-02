@@ -1,10 +1,12 @@
 # muffin-v-chihuahua with a ML model exposed as a service 🍪 🐶
 
-This repo offers some code to illustrate the following blog article <http://link to come when published>.
+This repo offers some code to illustrate the following blog article <https://blog.octo.com/amener-son-projet-de-machine-learning-jusquen-production-avec-wheel-et-docker/>.
 
 It aims to demonstrate one way to package with Wheel and Docker a Machine Learning application able to classify muffins and chihuahua in an image. 
 
 This way is described as the packaging of an ML application with **"a model isolated as a separate service"** in the [Continuous Delivery for Machine Learning (CD4ML)](https://martinfowler.com/articles/cd4ml.html#ModelServing) article from Martin Fowler's blog. 
+
+[This other repo](https://github.com/Mehdi-H/muffin-v-chihuahua-with-embedded-model) is available to demonstrate another packaging approach : with an "embedded model", also described in CD4ML article.
 
 
 This app needs :
